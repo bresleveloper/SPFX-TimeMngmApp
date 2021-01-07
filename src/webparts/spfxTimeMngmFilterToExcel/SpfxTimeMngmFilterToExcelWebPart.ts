@@ -11,6 +11,7 @@ import * as strings from 'SpfxTimeMngmFilterToExcelWebPartStrings';
 
 
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import ExcellentExport from 'excellentexport';
 
 
 export interface ISpfxTimeMngmFilterToExcelWebPartProps {
@@ -18,6 +19,9 @@ export interface ISpfxTimeMngmFilterToExcelWebPartProps {
 }
 
 export default class SpfxTimeMngmFilterToExcelWebPart extends BaseClientSideWebPart<ISpfxTimeMngmFilterToExcelWebPartProps> {
+
+  items=[]
+  totalTime=0
 
   public render(): void {
     this.domElement.innerHTML = `
@@ -58,6 +62,10 @@ export default class SpfxTimeMngmFilterToExcelWebPart extends BaseClientSideWebP
                   <label>נושא</label>
                   <select id="subject">
                   </select>
+                </div>
+
+                <div id="excel-wrapper" class="${ styles.buttonDiv }">
+                  <a id="excel" href="#" class="${ styles.button }">הורד אקסל</a>
                 </div>
                 
               </div>
@@ -122,13 +130,14 @@ export default class SpfxTimeMngmFilterToExcelWebPart extends BaseClientSideWebP
 
     this.getListItems('TimeMngApp-Hours', items=>{
       console.log('after search', items);
+      this.items = items
       let header = `<div class="${ styles.item } ${ styles.header }">
                 <div class="${ styles.start }"><label>תאריך התחלה</label></div>
                 <div class="${ styles.end }"><label>תאריך סיום</label></div>
                 <div class="${ styles.total }"><label>זמן עבודה</label></div>
               </div>`
       let h = header
-      let totalTime = 0.0;
+      this.totalTime = 0.0;
       for (let i = 0; i < items.length; i++) {
         const x = items[i];
         x._Created = this.dateFormat(new Date(x.Created))
@@ -138,14 +147,14 @@ export default class SpfxTimeMngmFilterToExcelWebPart extends BaseClientSideWebP
                 <div class="${ styles.end }"><span>${x._EndTime}</span></div>
                 <div class="${ styles.total }"><span>${x.TotalTime}</span></div>
               </div>`
-        totalTime += parseFloat(x.TotalMinutes)
+              this.totalTime += parseFloat(x.TotalMinutes)
         if (i == 10) {
           h += header
         }
       }
 
-      console.log('totalTime', totalTime);
-      let hrs = (totalTime/60).toFixed(2)
+      console.log('totalTime', this.totalTime);
+      let hrs = (this.totalTime/60).toFixed(2)
       h = `<div class="${ styles.item } ${ styles.sumTotal }"><label>סכה"כ שעות</label> &nbsp;&nbsp; <span>${hrs}</span></div>` + h
       this.domElement.querySelector('#content').innerHTML = h
 
@@ -168,6 +177,59 @@ export default class SpfxTimeMngmFilterToExcelWebPart extends BaseClientSideWebP
     this.domElement.querySelectorAll('select')
       //.forEach(elem => elem.addEventListener('click', this.setSearch.bind(this)));
       .forEach(elem => elem.addEventListener('change', this.setSearch.bind(this)));
+
+
+    this.domElement.querySelector('#excel').addEventListener('click', ()=>{
+      console.log('click excel');
+      let arr = /*window['__items'] = */this.items/* = items*/
+
+      let y = this.domElement.querySelector('#year')['value']
+      let m = this.domElement.querySelector('#month')['value']
+      let s = this.domElement.querySelector('#subject')['value']
+
+      /*let thinArr = arr.map(x => { return {
+          _Created : x._Created,
+          _EndTime : x._EndTime,
+          TotalTime : x.TotalTime,
+        }
+      })*/
+      let thinArr = arr.map(x => { return [ x._Created, x._EndTime, x.TotalTime ] })
+      thinArr.unshift(['התחלה', 'סיום', 'זמן'])
+      thinArr.unshift(['סיכום עבור', '', s])
+
+      let hrs = (this.totalTime/60).toFixed(2)
+      thinArr.push(['סכהכ זמן בשעות', '', hrs])
+      console.log('click excel', thinArr, arr);
+      
+
+      
+      let filename = `${y}-${m} - ${s}.xslx`
+
+      let options = {
+         anchor: this.domElement.querySelector('#excel'),
+         format: 'xlsx',
+         filename: filename
+      }
+
+      let sheet = {
+        //name: 'Sheet 1', // Sheet name
+        name : filename.replace('.xslx', ''),
+        from : {
+            //table: String/Element, // Table ID or table element
+            array: thinArr, // Array with data
+            //arrayHasHeader: true, // Array first row is the header // not in use
+            //removeColumns: [...], // Array of column indexes (from 0)
+            //filterRowFn: function(row) {return true} // Return true to keep
+        },
+     }
+
+     /*
+      */
+
+     ExcellentExport.convert(options, [sheet], true);
+
+    });
+    
   }
    
   protected get dataVersion(): Version {

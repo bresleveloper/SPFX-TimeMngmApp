@@ -10,6 +10,9 @@
       background-color: #008ace;
       color: white;
       border-radius: 8px;
+
+      background-color: $ms-color-themePrimary;
+      border: 1px solid white;
   }
 
   .flex{display: flex; justify-content: space-between;}
@@ -17,6 +20,19 @@
 
 
   .headLine{padding-bottom: 35px;}
+
+
+  .buttonDiv{
+    a {
+      border-color: white;
+      border: 1px solid white;
+      vertical-align: top;
+      height: auto;
+      padding: 8px 16px;
+      margin-top: -5px;
+      font-size: 0.8em;
+    }
+  }
 
 
   .content{
@@ -94,6 +110,10 @@
     background-color: $ms-color-themePrimary;
     border-color: $ms-color-themePrimary;
     color: $ms-color-white;
+
+    //ariel
+    border: 1px solid white;
+
 
     // Basic Button
     outline: transparent;

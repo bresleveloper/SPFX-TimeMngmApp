@@ -4,7 +4,7 @@ This SPFX is a completions to my Time Management App
 
 The report app was too simple to some clients so I created this SPFX with better results
 
-TBD - download to excel button
+Has download to excel button
 
 # ASSETS
 
@@ -38,3 +38,9 @@ or use `gulp serve` with `https://{tenant}.sharepoint.com/sites/{yourSiteName}/_
 ### jump to code
 
 [SpfxTimeMngmFilterToExcelWebPart.ts](https://github.com/bresleveloper/SPFX-TimeMngmApp/blob/master/src/webparts/spfxTimeMngmFilterToExcel/SpfxTimeMngmFilterToExcelWebPart.ts)
+
+#### fix for RTL in excel   
+in `ExcellentExport` I added option for RTL, [see issue](https://github.com/jmaister/excellentexport/issues/393)
+
+in our `ASSETS` folder i added the modified `excellentexport.js` minified version, you can change in your `node_module` folder
+
