@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "spfx-time-mngm-filter-to-excel-client-side-solution",
+    "id": "75c01070-2031-4974-9559-71d8d2bf16c4",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true
+  },
+  "paths": {
+    "zippedPackage": "solution/spfx-time-mngm-filter-to-excel.sppkg"
+  }
+}
