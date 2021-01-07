@@ -34,3 +34,7 @@ or use `gulp serve` with `https://{tenant}.sharepoint.com/sites/{yourSiteName}/_
 # I'm in YouTube
 
 [link to playlist with this app](https://www.youtube.com/watch?v=B1st9aDk_FU&list=PLbZpz8SE2dlceqH0kuwSjHMTfn5PWzLGp&index=2&ab_channel=ArielRubinstein)
+
+### jump to code
+
+[SpfxTimeMngmFilterToExcelWebPart.ts](https://github.com/bresleveloper/SPFX-TimeMngmApp/blob/master/src/webparts/spfxTimeMngmFilterToExcel/SpfxTimeMngmFilterToExcelWebPart.ts)
